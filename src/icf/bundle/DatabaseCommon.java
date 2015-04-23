@@ -161,7 +161,20 @@ public class DatabaseCommon {
 		}
 		else if(action.equals("select"))
 		{
-			ret.append("select * from "+tbInfo.getTableName()+";");
+			ret.append("select * from "+tbInfo.getTableName()+" ");
+						StringBuilder sb= new StringBuilder();
+			for(int i=0;i<para.size();i=i+2) {
+				if(tbInfo.getColumn(para.get(i))!=null)
+				{
+					sb.append(para.get(i)+"='"+para.get(i+1)+"'");
+					sb.append(',');
+					
+				}
+			}
+			if(sb.length()!=0) {
+				sb.deleteCharAt(sb.length()-1);
+				ret.append("where "+sb.toString());
+			}
 			
 		}
 		
