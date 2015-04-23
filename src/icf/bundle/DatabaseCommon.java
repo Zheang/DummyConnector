@@ -138,7 +138,7 @@ public class DatabaseCommon {
 			sb2.deleteCharAt(sb2.length()-1);
 			sb1.append(')');
 			sb2.append(')');
-			ret.append(sb1.toString() + " values " + sb2.toString() +";");
+			ret.append(sb1.toString() + " values " + sb2.toString());
 		}
 		else if(action.equals("delete"))
 		{
