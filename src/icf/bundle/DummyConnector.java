@@ -209,8 +209,10 @@ public class DummyConnector implements PoolableConnector, CreateOp, DeleteOp, Up
             para.add(config.getKeyColumn());
             para.add(accountUid);
             for(Attribute attr : attrs){
-            	para.add(attr.getName());
-            	para.add((String)attr.getValue().get(0));
+            	if(attr != null) {
+            		para.add(attr.getName());
+            		para.add((String)attr.getValue().get(0));
+            	}
             }
             String sql = dbcommon.sqlGenerator("update", para);
             dbcommon.excute(sql);
