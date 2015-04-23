@@ -267,7 +267,7 @@ public class DatabaseCommon {
         			return ci;
         		}
         	}
-        	throw new IndexOutOfBoundsException("Column not found");
+        	return null;
         	
         }
         
