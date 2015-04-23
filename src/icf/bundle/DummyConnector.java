@@ -39,7 +39,7 @@ import org.identityconnectors.framework.spi.operations.UpdateOp;
 
 
 
-public class DummyConnector implements PoolableConnector, CreateOp, DeleteOp, UpdateOp, SchemaOp{
+public class DummyConnector implements PoolableConnector, CreateOp, DeleteOp, UpdateOp, SchemaOp, SearchOp<Map<String,String>>{
 
 
 	private DummyConfiguration config;
@@ -226,5 +226,57 @@ public class DummyConnector implements PoolableConnector, CreateOp, DeleteOp, Up
         }
         return ret;
     }
+    
+    @Override
+	public FilterTranslator createFilterTranslator(ObjectClass oclass,
+			OperationOptions options) {
+
+        return new AbstractFilterTranslator<Map<String, String>>() {
+		};
+	}
+
+
+
+	@Override
+	public void executeQuery(ObjectClass oclass,  Map<String, String> attrs,
+			ResultsHandler handler, OperationOptions options) {
+		try {
+            dbcommon.openConnection();                
+            doSchema();
+            List<String> para = new ArrayList<String>();
+            for(String key :attrs.keySet()) {
+            	para.add(key);
+            	para.add(attrs.get(key));
+            }
+            String sql = dbcommon.sqlGenerator("select", para);
+            ResultSet rs = dbcommon.excute(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+            int count = meta.getColumnCount();
+            while(rs.next()) {
+            	ConnectorObjectBuilder conObjBld = new ConnectorObjectBuilder();
+            	for (int i = 1; i <= count; i++) {
+    	            String columnName = meta.getColumnName(i);
+    	            String value = rs.getString(columnName);
+
+    	            conObjBld.addAttribute(columnName, value);
+    	            System.out.println(columnName+" "+value);
+    	          
+    	        }
+            	conObjBld.setUid(rs.getString(config.getKeyColumn()));
+        		conObjBld.setName(rs.getString(config.getKeyColumn()));
+        		if (!handler.handle(conObjBld.build())) {                   
+                    break;
+                }
+            	
+            }
+            dbcommon.commit();
+        } catch (Exception e) {
+            dbcommon.rollback();
+            throw ConnectorException.wrap(e);
+        } finally {
+            dbcommon.closeConnection();
+        }
+		
+	}
 
 }
