@@ -223,9 +223,7 @@ public class DatabaseCommon {
 
 	
 	public class TableInfo {
-        private String tableName = ""; //name
-        
-        private String configuredName;
+        private String tableName = ""; 
 
         private Set<ColumnInfo> columnInfos = new HashSet<ColumnInfo>();
         
@@ -239,15 +237,6 @@ public class DatabaseCommon {
 
         public String getTableName() {
             return tableName;            
-        }
-        
-        public String getConfiguredName() {
-            return configuredName;
-        }
-        
-        public void setConfiguredName(String configuerdName)
-        {
-        	this.configuredName = configuerdName;
         }
         
         
