@@ -123,8 +123,36 @@ public class DummyConfiguration extends AbstractConfiguration{
 	
 	@Override
 	public void validate() {
-		
-		
+
+		if (StringUtil.isBlank(getTable())) {
+			throw new IllegalArgumentException("Table_Is_Blank");
+		}
+
+		if (StringUtil.isBlank(getJdbcUrlTemplate())) {
+			throw new IllegalArgumentException("Url_Is_Blank");
+		}
+
+		if (StringUtil.isNotBlank(getKeyColumn())) {
+			throw new IllegalArgumentException("Key_Column_Is_Blank");
+		}
+
+		if (getUser() == null) {
+			throw new IllegalArgumentException("User_Is_Blank");
+		}
+
+		if (getPassword() == null) {
+			throw new IllegalArgumentException("Password_Is_Blank");
+		}
+
+		if (StringUtil.isBlank(getJdbcDriver())) {
+			throw new IllegalArgumentException("JDBC_Driver_Is_Blank");
+		}
+		try {
+			Class.forName(getJdbcDriver());
+		} catch (ClassNotFoundException e) {
+			throw new IllegalArgumentException("JDBC_Driver_Not_Found");
+		}
+
 	}
 
 }
